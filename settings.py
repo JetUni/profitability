@@ -32,6 +32,7 @@ SECRET_KEY = '56%9kqwggt6#y!nx(z*n+7o-1wl(s-6+#9sy=5sq9c^==dqshh'
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    'localhost',
     'profitranking.bamboopest.com',
 ]
 
