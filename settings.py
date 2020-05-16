@@ -16,7 +16,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 try:
-    from . import local_settings
+    import local_settings
 except ImportError:
     print('Error: you need to create a local_settings.py file. See settings.py.')
     import sys
