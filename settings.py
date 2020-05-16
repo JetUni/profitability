@@ -15,6 +15,12 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+try:
+    from . import local_settings
+except ImportError:
+    print('Error: you need to create a local_settings.py file. See settings.py.')
+    import sys
+    sys.exit(1)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -78,8 +84,13 @@ WSGI_APPLICATION = 'wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': local_settings.DBNAME,
+        'USER': local_settings.DBUSER,
+        'PASSWORD': local_settings.DBPASSWORD,
+        'HOST': local_settings.DBHOST,
+        'PORT': local_settings.DBPORT,
+        'DISABLE_SERVER_SIDE_CURSORS': True,
     }
 }
 
