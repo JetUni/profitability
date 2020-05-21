@@ -23,6 +23,7 @@ pycodestyle==2.6.0
 pyflakes==2.2.0
 Pygments==2.2.0
 pylint==2.5.2
+pylint-django==2.0.15
 pytz==2020.1
 simplegeneric==0.8.1
 six==1.14.0
