@@ -6,7 +6,11 @@
 
 {% block morejs %}
   <script>
-    $('#jobs-table').DataTable();
+    $(document).ready(function(){
+      $('#jobs-table').DataTable({
+        'order': [[ 6, 'asc' ]]
+      });
+    });
   </script>
 {% endblock %}
 
@@ -15,7 +19,7 @@
   <div class="row">
     <a class="btn btn-info" href="{% url 'add_job' %}">Add Job</a>
   </div>
-  <table id="jobs-table">
+  <table id="jobs-table" class="table">
     <thead>
       <tr>
         <th>Name</th>
@@ -37,7 +41,7 @@
         <td>{{job.clock_in}}</td>
         <td>{{job.clock_out}}</td>
         <td>${{job.profitability}} / hour</td>
-      <tr>
+      </tr>
     {% endfor %}
     </tbody>
   </table>
