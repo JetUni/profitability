@@ -7,8 +7,12 @@
 {% block morejs %}
   <script>
     $(document).ready(function(){
-      $('#jobs-table').DataTable({
-        'order': [[ 6, 'asc' ]]
+      const jobsTable = $('#jobs-table').DataTable({
+        order: [[ 6, 'desc' ]],
+        pageLength: 25,
+        columnDefs: [
+          { className: "text-right", targets: [1, 6] },
+        ],
       });
     });
   </script>
@@ -40,7 +44,7 @@
         <td>{{job.employees_str}}</td>
         <td>{{job.clock_in}}</td>
         <td>{{job.clock_out}}</td>
-        <td>${{job.profitability}} / hour</td>
+        <td>{{job.profitability}}</td>
       </tr>
     {% endfor %}
     </tbody>
