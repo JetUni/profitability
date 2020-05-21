@@ -4,10 +4,42 @@
 <title>Profitability</title>
 {% endblock %}
 
+{% block morejs %}
+  <script>
+    $('#jobs-table').DataTable();
+  </script>
+{% endblock %}
+
 {% block body %}
 <div class="container">
   <div class="row">
     <a class="btn btn-info" href="{% url 'add_job' %}">Add Job</a>
   </div>
+  <table id="jobs-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Revenue</th>
+        <th>Job Type</th>
+        <th>Employees</th>
+        <th>Clock In</th>
+        <th>Clock Out</th>
+        <th>Profitability</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for job in jobs %}
+      <tr>
+        <td>{{job.name}}</td>
+        <td>${{job.revenue}}</td>
+        <td>{{job.job_type}}</td>
+        <td>{{job.employees_str}}</td>
+        <td>{{job.clock_in}}</td>
+        <td>{{job.clock_out}}</td>
+        <td>${{job.profitability}} / hour</td>
+      <tr>
+    {% endfor %}
+    </tbody>
+  </table>
 </div>
 {% endblock %}

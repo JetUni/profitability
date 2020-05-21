@@ -4,6 +4,10 @@
 <title>Profitability - Add Job</title>
 {% endblock %}
 
+{% block morejs %}
+  {{ form.media }}
+{% endblock %}
+
 {% block body %}
 <main class="container">
   <form method="post">
@@ -27,6 +31,16 @@
     <div class="form-group">
       {{ form.job_type.errors }}
       {{ form.job_type.label_tag }} {{ form.job_type }}
+    </div>
+
+    <div class="form-group">
+      {{ form.clock_in.errors }}
+      {{ form.clock_in.label_tag }} {{ form.clock_in }}
+    </div>
+
+    <div class="form-group">
+      {{ form.clock_out.errors }}
+      {{ form.clock_out.label_tag }} {{ form.clock_out }}
     </div>
 
     <div>

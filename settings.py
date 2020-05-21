@@ -41,6 +41,7 @@ ALLOWED_HOSTS = [
 
 INSTALLED_APPS = [
     'profit.apps.ProfitConfig',
+    'tempus_dominus',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

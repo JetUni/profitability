@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from .forms import AddJobForm
+from .models import Job
 
 
 def add_job(request):
@@ -16,4 +17,5 @@ def add_job(request):
 
 
 def index(request):
-    return render(request, 'profit/index.html')
+    jobs = Job.objects.all()
+    return render(request, 'profit/index.html', {'jobs': jobs})

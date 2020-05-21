@@ -1,3 +1,5 @@
+from datetime import timedelta
+from decimal import Decimal
 from django.db import models
 
 
@@ -16,11 +18,10 @@ class Employee(models.Model):
     def __str__(self):
         return ' '.join([self.first_name, self.last_name])
 
-    def hourly_rate(self, date):
-        if self.pay_type is Employee.PAY_TYPES[0][0]:
-            return self.pay_rate
-        elif self.pay_type is Employee.PAY_TYPES[0][1]:
+    def hourly_rate(self):
+        if Employee.PAY_TYPES[self.pay_type][1] == 'Salary':
             return self.pay_rate / 40 / 52
+        return self.pay_rate
 
 
 class JobType(models.Model):
@@ -35,6 +36,23 @@ class Job(models.Model):
     revenue = models.DecimalField(max_digits=20, decimal_places=2)
     job_type = models.ForeignKey(JobType, on_delete=models.CASCADE)
     employee = models.ManyToManyField(Employee)
+    clock_in = models.DateTimeField()
+    clock_out = models.DateTimeField()
 
     def __str__(self):
         return self.name
+
+    def employees_str(self):
+        employees = [str(employee) for employee in self.employee.all()]
+        return ', '.join(employees)
+
+    def job_time(self):
+        delta = self.clock_out - self.clock_in
+        return Decimal(delta.seconds / 60)
+
+    def profitability(self):
+        gross_revenue = self.revenue
+        for employee in self.employee.all():
+            employee_cost = employee.hourly_rate() * self.job_time() / 60
+            gross_revenue = gross_revenue - employee_cost
+        return format(gross_revenue / self.job_time() * 60, '.2f')
