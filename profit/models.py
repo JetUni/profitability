@@ -1,5 +1,4 @@
-from datetime import timedelta
-from decimal import Decimal
+from decimal import Decimal, DivisionByZero
 from django.db import models
 
 
@@ -55,4 +54,8 @@ class Job(models.Model):
         for employee in self.employee.all():
             employee_cost = employee.hourly_rate() * self.job_time() / 60
             gross_revenue = gross_revenue - employee_cost
-        return format(gross_revenue / self.job_time() * 60, '.2f')
+        try:
+            profitability = gross_revenue / self.job_time() * 60
+        except (DivisionByZero):
+            profitability = gross_revenue
+        return format(profitability, '.2f')
