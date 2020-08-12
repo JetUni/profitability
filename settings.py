@@ -29,7 +29,7 @@ except ImportError:
 SECRET_KEY = '56%9kqwggt6#y!nx(z*n+7o-1wl(s-6+#9sy=5sq9c^==dqshh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = local_settings.DEBUG
 
 ALLOWED_HOSTS = [
     'localhost',
