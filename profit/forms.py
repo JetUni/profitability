@@ -9,10 +9,12 @@ class AddJobForm(ModelForm):
         fields = [
             'name', 'revenue', 'job_type', 'employee', 'clock_in', 'clock_out',
         ]
+        widgets = {
+            'clock_in': DateTimePicker(attrs={'autocomplete': 'off'}),
+            'clock_out': DateTimePicker(attrs={'autocomplete': 'off'}),
+        }
 
     def __init__(self, *args, **kwargs):
         super(AddJobForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
-        self.fields['clock_in'].widget = DateTimePicker()
-        self.fields['clock_out'].widget = DateTimePicker()
