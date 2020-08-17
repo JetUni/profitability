@@ -10,8 +10,20 @@ class AddJobForm(ModelForm):
             'name', 'revenue', 'job_type', 'employee', 'clock_in', 'clock_out',
         ]
         widgets = {
-            'clock_in': DateTimePicker(attrs={'autocomplete': 'off'}),
-            'clock_out': DateTimePicker(attrs={'autocomplete': 'off'}),
+            'clock_in': DateTimePicker(
+                attrs={'autocomplete': 'off'},
+                options={
+                    'format': 'MM/DD/YYYY hh:mm A',
+                    'viewMode': 'times',
+                },
+            ),
+            'clock_out': DateTimePicker(
+                attrs={'autocomplete': 'off'},
+                options={
+                    'format': 'MM/DD/YYYY hh:mm A',
+                    'viewMode': 'times',
+                },
+            ),
         }
 
     def __init__(self, *args, **kwargs):
