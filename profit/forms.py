@@ -1,29 +1,35 @@
-from datetime import datetime
-from django.forms import ModelForm, DateTimeField
-from tempus_dominus.widgets import DateTimePicker
+from django.forms import ModelForm, DateField, TimeField
+from tempus_dominus.widgets import DatePicker, TimePicker
 from .models import Job
 
 
 class AddJobForm(ModelForm):
-    clock_in = DateTimeField(
-        input_formats=['%m/%d/%Y %I:%M %p'],
-        widget=DateTimePicker(
+    date = DateField(
+        input_formats=['%m/%d/%Y'],
+        widget=DatePicker(
             attrs={'autocomplete': 'off'},
-            options={'format': 'MM/DD/YYYY hh:mm A', 'viewMode': 'times'}
-        )
+            options={'format': 'MM/DD/YYYY'},
+        ),
     )
-    clock_out = DateTimeField(
-        input_formats=['%m/%d/%Y %I:%M %p'],
-        widget=DateTimePicker(
+    clock_in = TimeField(
+        input_formats=['%I:%M %p'],
+        widget=TimePicker(
             attrs={'autocomplete': 'off'},
-            options={'format': 'MM/DD/YYYY hh:mm A', 'viewMode': 'times'}
-        )
+            options={'format': 'hh:mm A'},
+        ),
+    )
+    clock_out = TimeField(
+        input_formats=['%I:%M %p'],
+        widget=TimePicker(
+            attrs={'autocomplete': 'off'},
+            options={'format': 'hh:mm A'},
+        ),
     )
 
     class Meta:
         model = Job
         fields = [
-            'name', 'revenue', 'job_type', 'employee', 'clock_in', 'clock_out',
+            'name', 'revenue', 'job_type', 'employee', 'date', 'clock_in', 'clock_out',
         ]
 
     def __init__(self, *args, **kwargs):

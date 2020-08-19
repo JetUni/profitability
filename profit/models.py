@@ -1,3 +1,4 @@
+from datetime import datetime
 from decimal import Decimal, DivisionByZero
 from django.db import models
 
@@ -35,8 +36,9 @@ class Job(models.Model):
     revenue = models.DecimalField(max_digits=20, decimal_places=2)
     job_type = models.ForeignKey(JobType, on_delete=models.CASCADE)
     employee = models.ManyToManyField(Employee)
-    clock_in = models.DateTimeField()
-    clock_out = models.DateTimeField()
+    date = models.DateField()
+    clock_in = models.TimeField()
+    clock_out = models.TimeField()
 
     def __str__(self):
         return self.name
@@ -46,7 +48,9 @@ class Job(models.Model):
         return ', '.join(employees)
 
     def job_time(self):
-        delta = self.clock_out - self.clock_in
+        clock_in = datetime.combine(self.date, self.clock_in)
+        clock_out = datetime.combine(self.date, self.clock_out)
+        delta = clock_out - clock_in
         return Decimal(delta.seconds / 60)
 
     def profitability(self):
