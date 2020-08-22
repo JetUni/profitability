@@ -1,11 +1,16 @@
 '''Forms for the Profit app'''
-from django.forms import ModelForm, DateField
+from django.forms import ModelForm, DateField, CharField, TextInput
 from tempus_dominus.widgets import DatePicker
 from .models import Job
 
 
 class AddJobForm(ModelForm):
     '''Form for adding a job'''
+    name = CharField(
+        widget=TextInput(
+            attrs={'autofocus': 'true'}
+        )
+    )
     date = DateField(
         input_formats=['%m/%d/%Y'],
         widget=DatePicker(
