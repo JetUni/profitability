@@ -26,6 +26,7 @@
   <table id="jobs-table" class="table">
     <thead>
       <tr>
+        <th>ID</th>
         <th>Name</th>
         <th>Revenue</th>
         <th>Job Type</th>
@@ -39,6 +40,7 @@
     <tbody>
     {% for job in jobs %}
       <tr>
+        <td>{{job.pk}}</td>
         <td>{{job.name}}</td>
         <td>${{job.revenue}}</td>
         <td>{{job.job_type}}</td>
