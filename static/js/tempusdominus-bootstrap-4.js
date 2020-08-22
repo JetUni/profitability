@@ -906,7 +906,7 @@ var DateTimePicker = function ($, moment) {
             }
 
             this._options.extraFormats = formats;
-            if (this.parseFormats) {
+            if (this.parseFormats || formats) {
                 this._initFormatting(); // reinit formatting
             }
         };
