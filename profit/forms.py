@@ -26,6 +26,12 @@ class AddJobForm(ModelForm):
         ]
 
     def __init__(self, *args, **kwargs):
+        instance = kwargs.get('instance')
+        if instance:
+            initial = {}
+            initial['clock_in'] = instance.clock_in.strftime('%I:%M %p')
+            initial['clock_out'] = instance.clock_out.strftime('%I:%M %p')
+            kwargs['initial'] = initial
         super(AddJobForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
