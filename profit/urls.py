@@ -1,3 +1,4 @@
+'''Url routes for the Profit app'''
 from django.urls import path
 from . import views
 

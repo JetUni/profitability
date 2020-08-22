@@ -1,9 +1,11 @@
+'''Models for the Profit app'''
 from datetime import datetime
 from decimal import Decimal, DivisionByZero
 from django.db import models
 
 
 class Employee(models.Model):
+    '''Employees are assigned to Jobs'''
     PAY_TYPES = (
         (0, 'Hourly'),
         (1, 'Salary'),
@@ -19,12 +21,14 @@ class Employee(models.Model):
         return ' '.join([self.first_name, self.last_name])
 
     def hourly_rate(self):
+        '''The hourly rate of an employee'''
         if Employee.PAY_TYPES[self.pay_type][1] == 'Salary':
             return self.pay_rate / 40 / 52
         return self.pay_rate
 
 
 class JobType(models.Model):
+    '''Job Types are used to filter jobs'''
     name = models.CharField(max_length=50)
 
     def __str__(self):
@@ -32,6 +36,7 @@ class JobType(models.Model):
 
 
 class Job(models.Model):
+    '''Jobs are the basis for calculating profitability'''
     name = models.CharField(max_length=100)
     revenue = models.DecimalField(max_digits=20, decimal_places=2)
     job_type = models.ForeignKey(JobType, on_delete=models.CASCADE)
@@ -44,16 +49,19 @@ class Job(models.Model):
         return self.name
 
     def employees_str(self):
+        '''Employees separated by a comma'''
         employees = [str(employee) for employee in self.employee.all()]
         return ', '.join(employees)
 
     def job_time(self):
+        '''Job time in minutes'''
         clock_in = datetime.combine(self.date, self.clock_in)
         clock_out = datetime.combine(self.date, self.clock_out)
         delta = clock_out - clock_in
         return Decimal(delta.seconds / 60)
 
     def profitability(self):
+        '''Profitability of a Job'''
         gross_revenue = self.revenue
         for employee in self.employee.all():
             employee_cost = employee.hourly_rate() * self.job_time() / 60

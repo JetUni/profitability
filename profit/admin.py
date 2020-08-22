@@ -1,3 +1,4 @@
+'''Admin for the Profit app'''
 from django.contrib import admin
 from .models import (Employee, Job, JobType)
 
