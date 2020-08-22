@@ -16,6 +16,19 @@ def add_job(request):
     return render(request, 'profit/add_job.html', {'form': form})
 
 
+def edit_job(request, pk):
+    if request.method == 'POST':
+        form = AddJobForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/')
+    else:
+        job = Job.objects.get(pk=pk)
+        form = AddJobForm(instance=job)
+
+    return render(request, 'profit/add_job.html', {'form': form})
+
+
 def index(request):
     jobs = Job.objects.all()
     return render(request, 'profit/index.html', {'jobs': jobs})

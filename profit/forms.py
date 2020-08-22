@@ -15,14 +15,14 @@ class AddJobForm(ModelForm):
         input_formats=['%I:%M %p'],
         widget=TimePicker(
             attrs={'autocomplete': 'off'},
-            options={'format': 'hh:mm A'},
+            options={'format': 'hh:mm A', 'extraFormats': ['hh:mm A']},
         ),
     )
     clock_out = TimeField(
         input_formats=['%I:%M %p'],
         widget=TimePicker(
             attrs={'autocomplete': 'off'},
-            options={'format': 'hh:mm A'},
+            options={'format': 'hh:mm A', 'extraFormats': ['hh:mm A']},
         ),
     )
 
@@ -31,6 +31,13 @@ class AddJobForm(ModelForm):
         fields = [
             'name', 'revenue', 'job_type', 'employee', 'date', 'clock_in', 'clock_out',
         ]
+
+    class Media:
+        extend = False
+        css = {
+            'all': ('css/tempusdominus-bootstrap-4.min.css',)
+        }
+        js = ('js/moment.min.js', 'js/tempusdominus-bootstrap-4.min.js',)
 
     def __init__(self, *args, **kwargs):
         super(AddJobForm, self).__init__(*args, **kwargs)
