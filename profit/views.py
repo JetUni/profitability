@@ -1,6 +1,6 @@
 '''Views for the Profit app'''
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from .forms import AddJobForm
 from .models import Job
 
@@ -21,7 +21,8 @@ def add_job(request):
 def edit_job(request, pk):
     '''View for editing a job'''
     if request.method == 'POST':
-        form = AddJobForm(request.POST)
+        instance = get_object_or_404(Job, pk=pk)
+        form = AddJobForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/')
