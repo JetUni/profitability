@@ -6,13 +6,91 @@
 
 {% block morejs %}
   <script>
-    $(document).ready(function(){
+    $(document).ready(() => {
       const jobsTable = $('#jobs-table').DataTable({
-        order: [[ 6, 'desc' ]],
+        order: [[ 9, 'desc' ]],
         pageLength: 25,
         columnDefs: [
-          { className: "text-right", targets: [1, 6] },
+          { className: 'text-right', targets: [3, 9] },
+          { responsivePriority: 1, targets: [2, 3, 6, 9] },
+          { responsivePriority: 2, targets: [4, 5] },
+          { responsivePriority: 3, targets: [7, 8] },
+          {
+            className: 'control',
+            orderable: false,
+            targets:   [0],
+          },
+          {
+            targets: [1],
+            visible: false,
+            searchable: false,
+            orderable: false,
+          },
         ],
+        select: {
+          style: 'multi+shift',
+        },
+        responsive: {
+          details: { type: 'column' },
+        },
+        dom: "<'row'<'col-sm-6'B><'col-sm-3'l><'col-sm-3'f>>" +
+            "<'row'<'col-sm-12'tr>>" +
+            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        buttons: [
+          {
+            text: 'Select All',
+            enabled: true,
+            action: (e, dt, node, config) => {
+              const items = dt.table().rows('tr', { filter: 'applied' });
+              items.select();
+            }
+          },
+          {
+            extend: 'selectNone',
+            text: 'Deselect All'
+          },
+          {
+            text: 'Edit',
+            extend: 'selected',
+            enabled: false,
+            action: (e, dt, node, config) => {
+              const row = dt.rows({ selected: true }).data();
+              window.location.href = '/jobs/' + row[0][1];
+            }
+          },
+          {
+            text: 'Delete',
+            extend: 'selected',
+            enabled: false,
+            action: (e, dt, node, config) => {
+              const rows = dt.rows({ selected: true }).data().toArray();
+              const ids = rows.map((row) => row[1]);
+              $.ajax({
+                  url: '/jobs/delete',
+                  type: 'POST',
+                  data: ids.join(','),
+                  headers: {
+                    'X-CSRFToken': $('input[name="csrfmiddlewaretoken"]').val(),
+                  },
+                  statusCode: {
+                    200: () => {
+                      dt.rows({ selected: true }).remove().draw();
+                    },
+                    400: () => {
+                      alert('Unable to delete jobs: ' + ids.join(','));
+                    },
+                  },
+              });
+            }
+          },
+        ],
+      });
+      jobsTable.on('select deselect', () => {
+        const selectedRows = jobsTable.rows({ selected: true }).count();
+        const totalRows = jobsTable.page.info().recordsTotal;
+        jobsTable.button(0).enable(selectedRows !== totalRows);
+        jobsTable.button(2).enable(selectedRows === 1);
+        jobsTable.button(3).enable(selectedRows > 0);
       });
     });
   </script>
@@ -26,6 +104,7 @@
   <table id="jobs-table" class="table">
     <thead>
       <tr>
+        <th></th>
         <th>ID</th>
         <th>Name</th>
         <th>Revenue</th>
@@ -40,6 +119,7 @@
     <tbody>
     {% for job in jobs %}
       <tr>
+        <td></td>
         <td>{{job.pk}}</td>
         <td>{{job.name}}</td>
         <td>${{job.revenue}}</td>
@@ -53,5 +133,8 @@
     {% endfor %}
     </tbody>
   </table>
+  <form id="ajax-form" hidden>
+    {% csrf_token %}
+  </form>
 </div>
 {% endblock %}
