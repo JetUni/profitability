@@ -1,19 +1,19 @@
 '''Views for the Profit app'''
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
-from .forms import AddJobForm
+from .forms import JobForm
 from .models import Job
 
 
 def add_job(request):
     '''View for adding a job'''
     if request.method == 'POST':
-        form = AddJobForm(request.POST)
+        form = JobForm(request.POST)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/')
     else:
-        form = AddJobForm()
+        form = JobForm()
 
     return render(request, 'profit/add_job.html', {'form': form})
 
@@ -22,13 +22,13 @@ def edit_job(request, pk):
     '''View for editing a job'''
     if request.method == 'POST':
         instance = get_object_or_404(Job, pk=pk)
-        form = AddJobForm(request.POST, instance=instance)
+        form = JobForm(request.POST, instance=instance)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/')
     else:
         job = Job.objects.get(pk=pk)
-        form = AddJobForm(instance=job)
+        form = JobForm(instance=job)
 
     return render(request, 'profit/add_job.html', {'form': form})
 

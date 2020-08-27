@@ -4,7 +4,7 @@ from tempus_dominus.widgets import DatePicker
 from .models import Job
 
 
-class AddJobForm(ModelForm):
+class JobForm(ModelForm):
     '''Form for adding a job'''
     name = CharField(
         widget=TextInput(
@@ -32,6 +32,6 @@ class AddJobForm(ModelForm):
             initial['clock_in'] = instance.clock_in.strftime('%I:%M %p')
             initial['clock_out'] = instance.clock_out.strftime('%I:%M %p')
             kwargs['initial'] = initial
-        super(AddJobForm, self).__init__(*args, **kwargs)
+        super(JobForm, self).__init__(*args, **kwargs)
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
