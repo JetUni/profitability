@@ -1,5 +1,5 @@
 '''Views for the Profit app'''
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from .forms import AddJobForm
 from .models import Job
@@ -31,6 +31,17 @@ def edit_job(request, pk):
         form = AddJobForm(instance=job)
 
     return render(request, 'profit/add_job.html', {'form': form})
+
+
+def delete_jobs(request):
+    '''View for deleting jobs'''
+    if request.method == 'POST' and request.is_ajax():
+        body = request.body.decode()
+        ids = body.split(',')
+        for pk in ids:
+            Job.objects.get(pk=pk).delete()
+        return HttpResponse('success')
+    return HttpResponse(status_code=400)
 
 
 def index(request):
