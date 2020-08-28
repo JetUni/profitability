@@ -20,6 +20,9 @@
           { responsivePriority: 2, targets: [5, 6] },
           { responsivePriority: 3, targets: [8, 9] },
           { orderSequence: ['desc', 'asc'], targets: [4, 10] },
+          { type: 'date', targets: [7], orderData: [7, 8, 9] },
+          { type: 'time', targets: [8], orderData: [8, 9] },
+          { type: 'time', targets: [9] },
           {
             targets:   [0],
             className: 'control',
@@ -112,6 +115,17 @@
           jobsTable.column(2).nodes().each((cell) => cell.innerHTML = '');
         }
       }).draw();
+      const timeReplace = (match, p1, p2, p3) => {
+        p1 = parseInt(p1);
+        p2 = parseInt(p2 || 0);
+        if (p3 === 'a' && p1 === 12) { p1 = 0 }
+        if (p3 === 'p' && p1 !== 12) { p1 = p1 + 12 }
+        return p1 + p2 / 60;
+      };
+      $.fn.dataTable.ext.oSort['time-pre'] = (a) => {
+        var x = String(a).replace(/^(\d+){1,2}:{0,1}(\d*){0,2}\ ([ap])\.m\.$/g, timeReplace);
+        return parseFloat(x);
+      };
     });
   </script>
 {% endblock %}
