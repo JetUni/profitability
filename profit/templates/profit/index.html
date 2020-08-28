@@ -8,23 +8,29 @@
   <script>
     $(document).ready(() => {
       const jobsTable = $('#jobs-table').DataTable({
-        order: [[ 9, 'desc' ]],
+        order: [[ 10, 'desc' ]],
         pageLength: 25,
         columnDefs: [
-          { className: 'text-right', targets: [3, 9] },
-          { responsivePriority: 1, targets: [2, 3, 6, 9] },
-          { responsivePriority: 2, targets: [4, 5] },
-          { responsivePriority: 3, targets: [7, 8] },
+          { className: 'text-right', targets: [4, 10] },
+          { responsivePriority: 1, targets: [3, 4, 7, 10] },
+          { responsivePriority: 2, targets: [5, 6] },
+          { responsivePriority: 3, targets: [8, 9] },
+          { orderSequence: ['desc', 'asc'], targets: [4, 10] },
           {
+            targets:   [0],
             className: 'control',
             orderable: false,
-            targets:   [0],
           },
           {
             targets: [1],
             visible: false,
             searchable: false,
             orderable: false,
+          },
+          {
+            targets: [2],
+            orderable: false,
+            searchable: false,
           },
         ],
         select: {
@@ -92,6 +98,16 @@
         jobsTable.button(2).enable(selectedRows === 1);
         jobsTable.button(3).enable(selectedRows > 0);
       });
+      jobsTable.on('order.dt search.dt', () => {
+        const order = jobsTable.order();
+        if (order[0][0] === 10) {  // 10: Profitability column
+          jobsTable.column(2, { search: 'applied', order: 'current' }).nodes().each((cell, i) => {
+            cell.innerHTML = i + 1;
+          });
+        } else {
+          jobsTable.column(2).nodes().each((cell) => cell.innerHTML = '');
+        }
+      }).draw();
     });
   </script>
 {% endblock %}
@@ -106,6 +122,7 @@
       <tr>
         <th></th>
         <th>ID</th>
+        <th>Rank</th>
         <th>Name</th>
         <th>Revenue</th>
         <th>Job Type</th>
@@ -121,6 +138,7 @@
       <tr>
         <td></td>
         <td>{{job.pk}}</td>
+        <td></td>
         <td>{{job.name}}</td>
         <td>${{job.revenue}}</td>
         <td>{{job.job_type}}</td>
