@@ -9,7 +9,11 @@
     $(document).ready(() => {
       const jobsTable = $('#jobs-table').DataTable({
         order: [[ 10, 'desc' ]],
-        pageLength: 25,
+        pageLength: 100,
+        lengthMenu: [
+          [10, 25, 50, 100, 250, -1],
+          [10, 25, 50, 100, 250, 'All'],
+        ],
         columnDefs: [
           { className: 'text-right', targets: [4, 10] },
           { responsivePriority: 1, targets: [3, 4, 7, 10] },
