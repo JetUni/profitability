@@ -16,9 +16,11 @@
         ],
         columnDefs: [
           { className: 'text-right', targets: [4, 10] },
-          { responsivePriority: 1, targets: [3, 4, 7, 10] },
-          { responsivePriority: 2, targets: [5, 6] },
-          { responsivePriority: 3, targets: [8, 9] },
+          { responsivePriority: 1, targets: [2, 3, 10] },
+          { responsivePriority: 2, targets: [7] },
+          { responsivePriority: 3, targets: [4] },
+          { responsivePriority: 4, targets: [5, 6] },
+          { responsivePriority: 5, targets: [8, 9] },
           { orderSequence: ['desc', 'asc'], targets: [4, 10] },
           { type: 'date', targets: [7], orderData: [7, 8, 9] },
           { type: 'time', targets: [8], orderData: [8, 9] },
@@ -46,9 +48,10 @@
         responsive: {
           details: { type: 'column' },
         },
-        dom: "<'row'<'col-sm-6'B><'col-sm-3'l><'col-sm-3'f>>" +
-            "<'row'<'col-sm-12'tr>>" +
-            "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+        dom:
+          "<'row'<'col-xl-5 col-md-12 col-sm-12'B><'col-xl-3 col-md-6 col-sm-12'l><'col-xl-4 col-md-6 col-sm-12'f>>" +
+          "<'row'<'col-sm-12'tr>>" +
+           "<'row'<'col-sm-5'i><'col-sm-7'p>>",
         buttons: [
           {
             text: 'Select All',
@@ -126,49 +129,77 @@
         var x = String(a).replace(/^(\d+){1,2}:{0,1}(\d*){0,2}\ ([ap])\.m\.$/g, timeReplace);
         return parseFloat(x);
       };
+
+      $.fn.dataTable.ext.search.push((settings, data, idx) => {
+        const min = Date.parse($('#startDate').val());
+        const max = Date.parse($('#endDate').val());
+        const date = Date.parse(data[7]) || 0;  // use data for the date column
+
+        if ((!min && !max) || (!min && date <= max) || (min <= date && !max) || (min <= date && date <= max)) {
+          return true;
+        }
+        return false;
+      });
+      $('#startDate, #endDate').change(() => {
+        jobsTable.draw();
+      });
     });
   </script>
 {% endblock %}
 
 {% block body %}
-<div class="container">
+<div class="container-fluid" style="max-width: 1640px">
   <div class="row">
-    <a class="btn btn-info" href="{% url 'add_job' %}">Add Job</a>
+    <div class="col-xl-3 col-lg-4 col-md-12">
+      <a class="btn btn-info" href="{% url 'add_job' %}">Add Job</a>
+      <div class="form-row">
+        <div class="form-group col-12">
+          <label for="startDate">Start Date:</label>
+          <input type="date" class="form-control" id="startDate">
+        </div>
+        <div class="form-group col-12">
+          <label for="endDate">End Date:</label>
+          <input type="date" class="form-control" id="endDate">
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-9 col-lg-8 col-md-12">
+      <table id="jobs-table" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+        <thead>
+          <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Rank</th>
+            <th>Name</th>
+            <th>Revenue</th>
+            <th>Job Type</th>
+            <th>Employees</th>
+            <th>Date</th>
+            <th>Clock In</th>
+            <th>Clock Out</th>
+            <th>Profitability</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for job in jobs %}
+          <tr>
+            <td></td>
+            <td>{{job.pk}}</td>
+            <td></td>
+            <td>{{job.name}}</td>
+            <td>${{job.revenue}}</td>
+            <td>{{job.job_type}}</td>
+            <td>{{job.employees_str}}</td>
+            <td>{{job.date}}</td>
+            <td>{{job.clock_in}}</td>
+            <td>{{job.clock_out}}</td>
+            <td>{{job.profitability}}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
-  <table id="jobs-table" class="table">
-    <thead>
-      <tr>
-        <th></th>
-        <th>ID</th>
-        <th>Rank</th>
-        <th>Name</th>
-        <th>Revenue</th>
-        <th>Job Type</th>
-        <th>Employees</th>
-        <th>Date</th>
-        <th>Clock In</th>
-        <th>Clock Out</th>
-        <th>Profitability</th>
-      </tr>
-    </thead>
-    <tbody>
-    {% for job in jobs %}
-      <tr>
-        <td></td>
-        <td>{{job.pk}}</td>
-        <td></td>
-        <td>{{job.name}}</td>
-        <td>${{job.revenue}}</td>
-        <td>{{job.job_type}}</td>
-        <td>{{job.employees_str}}</td>
-        <td>{{job.date}}</td>
-        <td>{{job.clock_in}}</td>
-        <td>{{job.clock_out}}</td>
-        <td>{{job.profitability}}</td>
-      </tr>
-    {% endfor %}
-    </tbody>
-  </table>
   <form id="ajax-form" hidden>
     {% csrf_token %}
   </form>
