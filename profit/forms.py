@@ -1,4 +1,5 @@
 '''Forms for the Profit app'''
+from django.core import validators
 from django.forms import ModelForm, DateField, CharField, TextInput
 from tempus_dominus.widgets import DatePicker
 from .models import Job
@@ -8,8 +9,10 @@ class JobForm(ModelForm):
     '''Form for adding a job'''
     name = CharField(
         widget=TextInput(
-            attrs={'autofocus': 'true'}
-        )
+            attrs={'autofocus': 'true'},
+        ),
+        max_length=40,
+        validators=[validators.MaxLengthValidator(40)],
     )
     date = DateField(
         input_formats=['%m/%d/%Y'],

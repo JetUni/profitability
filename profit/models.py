@@ -37,7 +37,7 @@ class JobType(models.Model):
 
 class Job(models.Model):
     '''Jobs are the basis for calculating profitability'''
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=40, db_index=True)
     revenue = models.DecimalField(max_digits=20, decimal_places=2)
     job_type = models.ForeignKey(JobType, on_delete=models.CASCADE)
     employee = models.ManyToManyField(Employee)
