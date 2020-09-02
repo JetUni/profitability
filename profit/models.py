@@ -1,6 +1,6 @@
 '''Models for the Profit app'''
 from datetime import datetime
-from decimal import Decimal, DivisionByZero
+from decimal import Decimal, DivisionByZero, InvalidOperation
 from django.db import models
 
 
@@ -68,6 +68,6 @@ class Job(models.Model):
             gross_revenue = gross_revenue - employee_cost
         try:
             profitability = gross_revenue / self.job_time() * 60
-        except (DivisionByZero):
+        except (DivisionByZero, InvalidOperation):
             profitability = gross_revenue
         return format(profitability, '.2f')
