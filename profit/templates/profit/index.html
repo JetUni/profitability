@@ -85,9 +85,6 @@
                   url: '/jobs/delete',
                   type: 'POST',
                   data: ids.join(','),
-                  headers: {
-                    'X-CSRFToken': $('input[name="csrfmiddlewaretoken"]').val(),
-                  },
                   statusCode: {
                     200: () => {
                       dt.rows({ selected: true }).remove().draw();
