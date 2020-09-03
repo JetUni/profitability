@@ -1,7 +1,8 @@
 '''Forms for the Profit app'''
 from django.core import validators
-from django.forms import ModelForm, DateField, CharField, TextInput
-from tempus_dominus.widgets import DatePicker
+from django.forms import (
+    ModelForm, DateField, DateInput, CharField, TextInput, TimeField, TimeInput
+)
 from .models import Job
 
 
@@ -15,10 +16,18 @@ class JobForm(ModelForm):
         validators=[validators.MaxLengthValidator(40)],
     )
     date = DateField(
-        input_formats=['%m/%d/%Y'],
-        widget=DatePicker(
-            attrs={'autocomplete': 'off'},
-            options={'format': 'MM/DD/YYYY'},
+        widget=DateInput(
+            attrs={'type': 'date'},
+        ),
+    )
+    clock_in = TimeField(
+        widget=TimeInput(
+            attrs={'type': 'time'},
+        ),
+    )
+    clock_out = TimeField(
+        widget=TimeInput(
+            attrs={'type': 'time'},
         ),
     )
 
