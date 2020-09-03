@@ -12,6 +12,23 @@
       $(this).prop('selected', !$(this).prop('selected'));
       return false;
     });
+
+    $('#id_name').autocomplete({
+      source: (request, response) => {
+        $.ajax({
+          url: '/jobs/autocomplete',
+          type: 'GET',
+          data: { name: request.term },
+          statusCode: {
+            200: (data) => {
+              response(data);
+            },
+          },
+        });
+      },
+      minLength: 2,
+      delay: 500,
+    });
   </script>
 {% endblock %}
 

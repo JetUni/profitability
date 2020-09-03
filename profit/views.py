@@ -1,5 +1,6 @@
 '''Views for the Profit app'''
-from django.http import HttpResponseRedirect, HttpResponse
+from django.db.models import Q
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from .forms import JobForm
 from .models import Job
@@ -41,6 +42,23 @@ def delete_jobs(request):
         for pk in ids:
             Job.objects.get(pk=pk).delete()
         return HttpResponse('success')
+    return HttpResponse(status_code=400)
+
+
+def autocomplete_jobs(request):
+    '''View for completing jquery automcomplete requests'''
+    if request.method == 'GET' and request.is_ajax():
+        name = request.GET['name']
+        if name == '':
+            return JsonResponse([], safe=False)
+        data = Job.objects.filter(
+            Q(name__icontains=name) | Q(name__istartswith=name),
+        ).values_list('name', flat=True)
+        json = []
+        for name in data:
+            if name not in json:
+                json.append(name)
+        return JsonResponse(json, safe=False)
     return HttpResponse(status_code=400)
 
 
