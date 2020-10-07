@@ -4,6 +4,17 @@ from decimal import Decimal, DivisionByZero, InvalidOperation
 from django.db import models
 
 
+class Company(models.Model):
+    '''Company a Job belongs to'''
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name_plural = 'Companies'
+
+    def __str__(self):
+        return self.name
+
+
 class Employee(models.Model):
     '''Employees are assigned to Jobs'''
     PAY_TYPES = (
@@ -44,6 +55,7 @@ class Job(models.Model):
     date = models.DateField()
     clock_in = models.TimeField()
     clock_out = models.TimeField()
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
