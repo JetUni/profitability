@@ -1,9 +1,10 @@
 '''Forms for the Profit app'''
+from datetime import datetime
 from django.core import validators
-from django.forms import (
-    ModelForm, DateField, DateInput, CharField, TextInput, TimeField, TimeInput
-)
-from .models import Job
+from django.forms import (CharField, DateField, DateInput, ModelForm,
+                          TextInput, TimeField, TimeInput)
+
+from profit.models import Company, Job
 
 
 class JobForm(ModelForm):
@@ -35,15 +36,16 @@ class JobForm(ModelForm):
         model = Job
         fields = [
             'name', 'revenue', 'job_type', 'employee', 'date', 'clock_in', 'clock_out',
+            'company',
         ]
 
     def __init__(self, *args, **kwargs):
+        super(JobForm, self).__init__(*args, **kwargs)
         instance = kwargs.get('instance')
         if instance:
-            initial = {}
-            initial['clock_in'] = instance.clock_in.strftime('%I:%M %p')
-            initial['clock_out'] = instance.clock_out.strftime('%I:%M %p')
-            kwargs['initial'] = initial
-        super(JobForm, self).__init__(*args, **kwargs)
+            self.initial['clock_in'] = instance.clock_in.strftime('%H:%M')
+            self.initial['clock_out'] = instance.clock_out.strftime('%H:%M')
+        else:
+            self.initial['company'] = Company.objects.first().id
         for visible in self.visible_fields():
             visible.field.widget.attrs['class'] = 'form-control'
