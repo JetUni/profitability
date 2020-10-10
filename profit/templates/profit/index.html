@@ -8,6 +8,7 @@
   <script>
     $(document).ready(() => {
       const jobsTable = $('#jobs-table').DataTable({
+        pagingType: $(window).width() < 768 ? "numbers" : "simple_numbers",
         order: [[ 10, 'desc' ]],
         pageLength: 100,
         lengthMenu: [
