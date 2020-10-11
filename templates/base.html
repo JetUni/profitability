@@ -46,7 +46,7 @@
       {% if not request.user.is_anonymous %}
         <div class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <a>
-            <span>{{ request.user.first_name }}</span>
+            <span>{{ request.user.get_short_name }}</span>
           </a>
         </div>
         <div class="dropdown-menu">
@@ -55,10 +55,10 @@
             <a class="dropdown-item" href="/admin">Admin</a>
           {% endif %}
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="/logout">Logout</a>
+          <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
         </div>
       {% else %}
-        <a href="/login"><span>Login</span></a>
+        <a href="{% url 'login' %}"><span>Login</span></a>
       {% endif %}
     </nav>
     {% block body %}{% endblock %}
