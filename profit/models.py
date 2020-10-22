@@ -1,7 +1,10 @@
 '''Models for the Profit app'''
 from datetime import datetime
 from decimal import Decimal, DivisionByZero, InvalidOperation
+from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class Company(models.Model):
@@ -83,3 +86,30 @@ class Job(models.Model):
         except (DivisionByZero, InvalidOperation):
             profitability = gross_revenue
         return format(profitability, '.2f')
+
+
+class UserProfile(models.Model):
+    '''User Profile for extending the User model'''
+    user = models.OneToOneField(
+        User, related_name='profile', on_delete=models.CASCADE, db_index=True
+    )
+
+    class Meta:
+        verbose_name = 'User Profile'
+
+    def __str__(self):
+        fullname = self.user.first_name + ' ' + self.user.last_name
+        return fullname if fullname != ' ' else str(self.user)
+
+
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, **kwargs):
+    '''When a user is created, create a profile for them'''
+    if created and not instance.profile:
+        UserProfile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_profile(sender, instance, **kwargs):
+    '''When a user is saved, save the profile as well'''
+    instance.profile.save()
