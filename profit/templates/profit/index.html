@@ -103,21 +103,21 @@
               const rows = dt.rows({ selected: true }).data().toArray();
               const ids = rows.map((row) => row[1]);
               $.ajax({
-                  url: '/jobs/delete',
-                  type: 'POST',
-                  data: ids.join(','),
-                  statusCode: {
-                    200: (resp, status, jqXHR) => {
-                      dt.rows({ selected: true }).remove();
-                      for (const col of searchPaneColumns) {
-                        dt.searchPanes.rebuildPane(col, true);
-                      }
-                      dt.rows({ order: 'applied', page: 'current', search: 'applied' }).draw();
-                    },
-                    400: () => {
-                      alert('Unable to delete jobs: ' + ids.join(','));
-                    },
+                url: '/jobs/delete',
+                type: 'POST',
+                data: ids.join(','),
+                statusCode: {
+                  200: (resp, status, jqXHR) => {
+                    dt.rows({ selected: true }).remove();
+                    for (const col of searchPaneColumns) {
+                      dt.searchPanes.rebuildPane(col, true);
+                    }
+                    dt.rows({ order: 'applied', page: 'current', search: 'applied' }).draw();
                   },
+                  400: () => {
+                    alert('Unable to delete jobs: ' + ids.join(','));
+                  },
+                },
               });
             }
           },

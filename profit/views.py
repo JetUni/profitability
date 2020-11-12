@@ -3,8 +3,9 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
-from .forms import JobForm
-from .models import Job
+
+from profit.forms import JobForm
+from profit.models import Job
 
 
 @login_required
