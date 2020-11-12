@@ -7,7 +7,13 @@
 {% block morejs %}
   <script>
     $(document).ready(() => {
+      const searchPaneColumns = [5, 6, 10];
       const jobsTable = $('#jobs-table').DataTable({
+        language: {
+          searchPanes: {
+            countFiltered: '{shown}',
+          },
+        },
         pagingType: $(window).width() < 768 ? "numbers" : "simple_numbers",
         order: [[ 10, 'desc' ]],
         pageLength: 100,
@@ -15,6 +21,12 @@
           [10, 25, 50, 100, 250, -1],
           [10, 25, 50, 100, 250, 'All'],
         ],
+        searchPanes: {
+          layout: 'columns-1',
+          columns: searchPaneColumns,
+          controls: false,
+          viewTotal: true,
+        },
         columnDefs: [
           { responsivePriority: 1, targets: [2, 3, 10] },
           { responsivePriority: 2, targets: [7] },
@@ -51,7 +63,7 @@
         dom:
           "<'row'<'col-xl-5 col-md-12 col-sm-12'B><'col-xl-3 col-md-6 col-sm-12'l><'col-xl-4 col-md-6 col-sm-12'f>>" +
           "<'row'<'col-sm-12'tr>>" +
-           "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+          "<'row'<'col-sm-5'i><'col-sm-7'p>><'#searchPanes'P>",
         buttons: [
           {
             text: 'Select All',
@@ -164,6 +176,8 @@
         }
         jobsTable.draw();
       });
+
+      $('#searchPanes').appendTo('#filter-row');
     });
   </script>
 {% endblock %}
@@ -173,7 +187,7 @@
   <div class="row">
     <div class="col-xl-3 col-lg-4 col-md-12">
       <a class="btn btn-info" href="{% url 'add_job' %}">Add Job</a>
-      <div class="form-row">
+      <div class="form-row" id="filter-row">
         <div class="form-group col-12">
           <label for="startDate">Start Date:</label>
           <input type="date" class="form-control" id="startDate">
