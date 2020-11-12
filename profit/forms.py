@@ -40,7 +40,11 @@ class JobForm(ModelForm):
         ]
 
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
         super(JobForm, self).__init__(*args, **kwargs)
+        if self.user and self.user.is_authenticated:
+            companies = self.user.profile.companies.values_list('id', flat=True)
+            self.fields['company'].queryset = self.fields['company'].queryset.filter(pk__in=list(companies))
         instance = kwargs.get('instance')
         if instance:
             self.initial['clock_in'] = instance.clock_in.strftime('%H:%M')

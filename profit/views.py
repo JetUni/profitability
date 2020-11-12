@@ -16,7 +16,7 @@ def add_job(request):
             form.save()
             return HttpResponseRedirect('/')
     else:
-        form = JobForm()
+        form = JobForm(user=request.user)
 
     return render(request, 'profit/add_job.html', {'form': form})
 
@@ -32,7 +32,7 @@ def edit_job(request, pk):
             return HttpResponseRedirect('/')
     else:
         job = Job.objects.get(pk=pk)
-        form = JobForm(instance=job)
+        form = JobForm(instance=job, user=request.user)
 
     return render(request, 'profit/add_job.html', {'form': form})
 
