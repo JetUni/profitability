@@ -138,25 +138,30 @@
             action: (e, dt, node, config) => {
               {% if user.is_anonymous %}
                 window.location.href = '{% url "login" %}';
+                return;
               {% endif %}
+              $('#confirmDeleteModal').modal('show');
+
               const rows = dt.rows({ selected: true }).data().toArray();
               const ids = rows.map((row) => row[1]);
-              $.ajax({
-                url: '/jobs/delete',
-                type: 'POST',
-                data: ids.join(','),
-                statusCode: {
-                  200: (resp, status, jqXHR) => {
-                    dt.rows({ selected: true }).remove();
-                    for (const col of searchPaneColumns) {
-                      dt.searchPanes.rebuildPane(col, true);
-                    }
-                    dt.rows({ order: 'applied', page: 'current', search: 'applied' }).draw();
+              $('#confirmDeleteModal').on('hide.bs.modal', (e) => {
+                $.ajax({
+                  url: '{% url "delete_jobs" %}',
+                  type: 'POST',
+                  data: ids.join(','),
+                  statusCode: {
+                    200: (resp, status, jqXHR) => {
+                      dt.rows({ selected: true }).remove();
+                      for (const col of searchPaneColumns) {
+                        dt.searchPanes.rebuildPane(col, true);
+                      }
+                      dt.rows({ order: 'applied', page: 'current', search: 'applied' }).draw();
+                    },
+                    400: () => {
+                      alert('Unable to delete jobs: ' + ids.join(','));
+                    },
                   },
-                  400: () => {
-                    alert('Unable to delete jobs: ' + ids.join(','));
-                  },
-                },
+                });
               });
             }
           },
@@ -298,5 +303,23 @@
   {% if user.profile.companies.count > 1 %}
     <div class="hidden" id="showCompanies"></div>
   {% endif %}
+
+  <!-- Confirm Delete Modal -->
+  <div class="modal fade" id="confirmDeleteModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Are you sure?</h5>
+          <button type="button" class="close" data-dismiss="modal">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger mr-auto" data-dismiss="modal">Delete</button>
+          <button type="button" class="btn btn-outline-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
