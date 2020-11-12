@@ -16,7 +16,6 @@
           [10, 25, 50, 100, 250, 'All'],
         ],
         columnDefs: [
-          { className: 'text-right', targets: [4, 10] },
           { responsivePriority: 1, targets: [2, 3, 10] },
           { responsivePriority: 2, targets: [7] },
           { responsivePriority: 3, targets: [4] },
@@ -191,13 +190,13 @@
             <td>{{job.pk}}</td>
             <td></td>
             <td>{{job.name}}</td>
-            <td>${{job.revenue}}</td>
+            <td class="text-right">${{job.revenue}}</td>
             <td>{{job.job_type}}</td>
             <td>{{job.employees_str}}</td>
             <td>{{job.date}}</td>
             <td>{{job.clock_in}}</td>
             <td>{{job.clock_out}}</td>
-            <td>{{job.profitability}}</td>
+            <td class="text-right">{{job.profitability}}</td>
           </tr>
         {% endfor %}
         </tbody>
