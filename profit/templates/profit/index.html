@@ -7,7 +7,7 @@
 {% block morejs %}
   <script>
     $(document).ready(() => {
-      const searchPaneColumns = [5, 6, 10];
+      const searchPaneColumns = [5, 6, 10, 11];
       const jobsTable = $('#jobs-table').DataTable({
         language: {
           searchPanes: {
@@ -57,6 +57,45 @@
             targets: [10],
             searchPanes: {
               show: $('#showCompanies').length,
+            },
+          },
+          {
+            targets:[11],
+            searchPanes: {
+              show: true,
+              options:[
+                {
+                  label: '0 to 50',
+                  value: (rowData, rowIdx) => {
+                      return rowData[11] < 50;
+                  },
+                }, {
+                  label: '50 to 100',
+                  value: (rowData, rowIdx) => {
+                      return rowData[11] >= 50 && rowData[11] < 100;
+                  },
+                }, {
+                  label: '100 to 200',
+                  value: (rowData, rowIdx) => {
+                      return rowData[11] >= 100 && rowData[11] < 200;
+                  },
+                }, {
+                  label: '200 to 300',
+                  value: (rowData, rowIdx) => {
+                      return rowData[11] >= 200 && rowData[11] < 300;
+                  },
+                }, {
+                  label: '300 to 400',
+                  value: (rowData, rowIdx) => {
+                      return rowData[11] >= 300 && rowData[11] < 400;
+                  },
+                }, {
+                  label: 'Over 400',
+                  value: (rowData, rowIdx) => {
+                      return rowData[11] >= 400;
+                  },
+                },
+              ]
             },
           },
         ],
