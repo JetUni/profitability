@@ -134,9 +134,11 @@
       };
 
       $.fn.dataTable.ext.search.push((settings, data, idx) => {
-        const min = Date.parse($('#startDate').val());
-        const max = Date.parse($('#endDate').val());
-        const date = Date.parse(data[7]) || 0;  // use data for the date column
+        let parts = $('#startDate').val().split('-');
+        const min = Date.UTC(+parts[0], +parts[1] - 1, +parts[2], 0, 0, 0, 0);
+        parts = $('#endDate').val().split('-');
+        const max = Date.UTC(+parts[0], +parts[1] - 1, +parts[2], 23, 59, 59, 999);
+        const date = Date.parse(data[7]) || 0;  // use data from the date column
 
         if ((!min && !max) || (!min && date <= max) || (min <= date && !max) || (min <= date && date <= max)) {
           return true;
