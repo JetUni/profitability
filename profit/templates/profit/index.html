@@ -143,7 +143,22 @@
         }
         return false;
       });
-      $('#startDate, #endDate').change(() => {
+
+      $('#startDate').change(() => {
+        const start = $('#startDate');
+        const end = $('#endDate');
+        if (start.val() && end.val() && new Date(start.val()) > new Date(end.val())) {
+          start.val(end.val());
+        }
+        jobsTable.draw();
+      });
+
+      $('#endDate').change(() => {
+        const start = $('#startDate');
+        const end = $('#endDate');
+        if (start.val() && end.val() && new Date(end.val()) < new Date(start.val())) {
+          end.val(start.val());
+        }
         jobsTable.draw();
       });
     });
