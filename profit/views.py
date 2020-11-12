@@ -68,5 +68,10 @@ def autocomplete_jobs(request):
 
 def index(request):
     '''View for displaying a table of jobs'''
-    jobs = Job.objects.all()
+    user = request.user
+    if user.is_authenticated:
+        companies = user.profile.companies.values_list('id', flat=True)
+        jobs = Job.objects.filter(company__pk__in=list(companies))
+    else:
+        jobs = Job.objects.all()
     return render(request, 'profit/index.html', {'jobs': jobs})
