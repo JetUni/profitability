@@ -83,12 +83,14 @@
       </div>
     </div>
 
+    {% if user.profile.companies.count > 1 %}
     <div class="form-row">
       <div class="form-group col-md-6 col-sm-12">
         {{ form.company.errors }}
         {{ form.company.label_tag }} {{ form.company }}
       </div>
     </div>
+    {% endif %}
 
     <div>
       <button class="btn btn-success" type="submit">Save</button>
