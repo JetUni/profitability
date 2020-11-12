@@ -89,8 +89,9 @@
                   type: 'POST',
                   data: ids.join(','),
                   statusCode: {
-                    200: () => {
-                      dt.rows({ selected: true }).remove().draw();
+                    200: (resp, status, jqXHR) => {
+                      dt.rows({ selected: true }).remove();
+                      dt.rows({ order: 'applied', page: 'current', search: 'applied' }).draw();
                     },
                     400: () => {
                       alert('Unable to delete jobs: ' + ids.join(','));
