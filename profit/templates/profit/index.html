@@ -103,6 +103,9 @@
                   statusCode: {
                     200: (resp, status, jqXHR) => {
                       dt.rows({ selected: true }).remove();
+                      for (const col of searchPaneColumns) {
+                        dt.searchPanes.rebuildPane(col, true);
+                      }
                       dt.rows({ order: 'applied', page: 'current', search: 'applied' }).draw();
                     },
                     400: () => {
