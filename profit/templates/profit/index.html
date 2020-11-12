@@ -150,6 +150,9 @@
       };
 
       $.fn.dataTable.ext.search.push((settings, data, idx) => {
+        if (settings.nTable.id !== 'jobs-table') {
+          return true;
+        }
         let parts = $('#startDate').val().split('-');
         const min = Date.UTC(+parts[0], +parts[1] - 1, +parts[2], 0, 0, 0, 0);
         parts = $('#endDate').val().split('-');
