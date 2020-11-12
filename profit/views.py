@@ -1,4 +1,5 @@
 '''Views for the Profit app'''
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404
@@ -6,6 +7,7 @@ from .forms import JobForm
 from .models import Job
 
 
+@login_required
 def add_job(request):
     '''View for adding a job'''
     if request.method == 'POST':
@@ -19,6 +21,7 @@ def add_job(request):
     return render(request, 'profit/add_job.html', {'form': form})
 
 
+@login_required
 def edit_job(request, pk):
     '''View for editing a job'''
     if request.method == 'POST':
@@ -34,6 +37,7 @@ def edit_job(request, pk):
     return render(request, 'profit/add_job.html', {'form': form})
 
 
+@login_required
 def delete_jobs(request):
     '''View for deleting jobs'''
     if request.method == 'POST' and request.is_ajax():

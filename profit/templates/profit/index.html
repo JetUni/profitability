@@ -80,6 +80,9 @@
             extend: 'selected',
             enabled: false,
             action: (e, dt, node, config) => {
+              {% if user.is_anonymous %}
+                window.location.href = '{% url "login" %}';
+              {% endif %}
               const rows = dt.rows({ selected: true }).data().toArray();
               const ids = rows.map((row) => row[1]);
               $.ajax({
