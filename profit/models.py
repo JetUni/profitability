@@ -2,6 +2,7 @@
 from datetime import datetime
 from decimal import Decimal, DivisionByZero, InvalidOperation
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -89,6 +90,39 @@ class Job(models.Model):
         except (DivisionByZero, InvalidOperation):
             profitability = gross_revenue
         return format(profitability, '.2f')
+
+
+class AlertSetting(models.Model):
+    '''User or Company defined settings for Job Alerts'''
+    ALERT_TYPES = (
+        (0, 'Revenue'),
+        (1, 'Start Time'),
+        (2, 'End Time'),
+        (3, 'Duration'),
+        (4, 'Profitability'),
+    )
+
+    alert_filter = ArrayField(
+        models.PositiveSmallIntegerField(
+            choices=ALERT_TYPES, default=ALERT_TYPES[0][0], blank=False, null=False),
+        size=5,
+    )
+    company = models.ForeignKey(
+        Company, on_delete=models.CASCADE, blank=True, null=True)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, blank=True, null=True)
+    send_email = models.BooleanField(blank=False, null=False, default=False)
+    email = ArrayField(models.EmailField())
+
+
+class Alert(models.Model):
+    '''Alerts are created for Jobs meeting criteria of AlertSettings'''
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    setting = models.ForeignKey(
+        AlertSetting, on_delete=models.CASCADE, blank=False, null=False)
+    job = models.ForeignKey(
+        Job, on_delete=models.CASCADE, blank=False, null=False)
+    read = models.BooleanField(blank=False, null=False, default=False)
 
 
 class UserProfile(models.Model):
