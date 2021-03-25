@@ -59,6 +59,9 @@ class Job(models.Model):
     clock_in = models.TimeField()
     clock_out = models.TimeField()
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    created_by = models.ForeignKey(
+        User, on_delete=models.DO_NOTHING, null=True)
 
     def __str__(self):
         return self.name
