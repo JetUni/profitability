@@ -26,7 +26,7 @@ except ImportError:
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '56%9kqwggt6#y!nx(z*n+7o-1wl(s-6+#9sy=5sq9c^==dqshh'
+SECRET_KEY = local_settings.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = local_settings.DEBUG
